@@ -122,13 +122,31 @@ Filter/search/sort state lives in the URL query string, not client component sta
 
 - **Auth is a Credentials-based dev login (email only, no password), restricted to pre-seeded users.** No self-service signup. This was a deliberate scope choice to avoid standing up an OAuth app or email-sending service for a take-home; a production version would use a real provider.
 - **Unauthenticated access currently surfaces as a thrown error caught by an error boundary, not a middleware redirect.** The more idiomatic Next.js pattern is redirecting unauthenticated users to sign-in before the route renders at all. Functionally correct for this scope, but not the version I'd ship.
-- **No org-management or project-creation UI** — organizations, projects, and role assignments are seeded directly, not created through the app. Out of scope for the review-workspace slice this assignment asked for.
+- **No organization management UI yet.** Organizations, projects, and memberships are currently seeded. If I were extending this application, the next logical step would be an organization management panel where Organization Owners can:
+  - Create and manage projects.
+  - Invite and remove organization members.
+  - Assign organization roles.
+  - Add or remove project members and manage project-level permissions.
 - **`ImportOutcome` enum doesn't have a distinct `IMPORTED_WITH_WARNING` value** — rows imported with a soft validation issue (bad year, etc.) are currently stored as `IMPORTED` with the warning message preserved on `ImportRow.errorMessage`, rather than having their own enum value. Either is defensible; I'd add the enum value if extending this further.
 - **CSV export, bulk actions, and saved filter views** (all listed as optional enhancements) were not built, to keep the core workflow correctly scoped within the timebox.
 
-## Deployment status
+## Deployment
 
-Not deployed. Planned approach documented for Phase 6 (AWS via SST): Next.js site construct, RDS Postgres (or Aurora Serverless v2 for cost-consciousness), secrets managed via `sst secret set` for `DATABASE_URL`/`AUTH_SECRET` (never committed), and `prisma migrate deploy` run as a deploy-hook step rather than `migrate dev`.
+### Production
+
+The application is currently deployed on **Vercel** and uses **Neon PostgreSQL** as the production database.
+
+The Vercel deployment demonstrates the complete application workflow, including authentication, article import, review workflow, and server-side authorization.
+
+### AWS (SST)
+
+I also prepared the project for deployment using **SST on AWS**.
+
+The infrastructure was configured to deploy the Next.js application using SST while storing secrets securely through SST Secrets and using Neon PostgreSQL instead of provisioning an AWS database.
+
+However, deployment could not be completed because the AWS account used for this assignment was newly created and CloudFront creation is currently blocked until AWS completes account verification.
+
+Once the account restriction is removed, the existing SST configuration can be deployed without additional application changes.
 
 ## AI usage disclosure
 
@@ -160,8 +178,10 @@ About 8-10 hours of active design, implementation, testing, and refinement.
 
 ## What I'd improve next
 
-1. Middleware-based auth redirect instead of the error-boundary-catches-`UnauthenticatedError` pattern.
-2. CSV export of reviewed articles — cheap to add given the existing filtered-query shape.
-3. Saved filter presets, given filter state already lives in a serializable URL query string.
-4. Complete the AWS/SST deployment.
-5. Allow users to correct imported rows with warnings (for example, an accidentally future publication year) directly from the import results screen and resubmit only those affected fields instead of re-uploading the entire spreadsheet.
+1. Middleware-based authentication redirects instead of relying on the error boundary for unauthenticated requests.
+2. CSV export of reviewed articles.
+3. Saved filter presets.
+4. Organization management panel for Organization Owners.
+5. Project management UI with member assignment and role management.
+6. Complete AWS deployment using SST once the AWS account restriction is removed.
+7. Allow users to correct imported rows with warnings directly from the import results screen instead of re-uploading the spreadsheet.
