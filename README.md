@@ -122,7 +122,6 @@ Filter/search/sort state lives in the URL query string, not client component sta
 
 - **Auth is a Credentials-based dev login (email only, no password), restricted to pre-seeded users.** No self-service signup. This was a deliberate scope choice to avoid standing up an OAuth app or email-sending service for a take-home; a production version would use a real provider.
 - **Unauthenticated access currently surfaces as a thrown error caught by an error boundary, not a middleware redirect.** The more idiomatic Next.js pattern is redirecting unauthenticated users to sign-in before the route renders at all. Functionally correct for this scope, but not the version I'd ship.
-- **`ReviewNote`s don't yet load existing notes on mount** — the notes panel only shows notes added in the current session rather than fetching `article.reviewNotes` on initial render. Known gap, not an intentional design choice — the fix is a one-line `include` on the existing article query plus seeding component state from it.
 - **No org-management or project-creation UI** — organizations, projects, and role assignments are seeded directly, not created through the app. Out of scope for the review-workspace slice this assignment asked for.
 - **`ImportOutcome` enum doesn't have a distinct `IMPORTED_WITH_WARNING` value** — rows imported with a soft validation issue (bad year, etc.) are currently stored as `IMPORTED` with the warning message preserved on `ImportRow.errorMessage`, rather than having their own enum value. Either is defensible; I'd add the enum value if extending this further.
 - **CSV export, bulk actions, and saved filter views** (all listed as optional enhancements) were not built, to keep the core workflow correctly scoped within the timebox.
@@ -133,19 +132,36 @@ Not deployed. Planned approach documented for Phase 6 (AWS via SST): Next.js sit
 
 ## AI usage disclosure
 
-I used Claude (Anthropic) as a pairing/design partner throughout this assignment:
+I used ChatGPT & Gemini as an engineering assistant throughout this assignment.
 
-- **What it was used for:** 
-- **What I personally verified:**
-- **One example where I changed or rejected AI output:** 
+### How AI was used
+
+- Discussing architecture decisions and implementation tradeoffs.
+- Reviewing the data model and authorization approach.
+- Explaining unfamiliar Next.js/Auth.js concepts.
+- Suggesting approaches for validation, testing, and code organization.
+- Reviewing portions of the implementation for readability and maintainability.
+
+### What I personally implemented and verified
+
+- Designed the final data model and project-level authorization flow.
+- Implemented the application features, Prisma models, server actions, and UI.
+- Adapted AI suggestions where necessary to fit the application's architecture and requirements.
+- Verified database migrations, authorization behavior, and the complete import/review workflow manually.
+- Wrote and executed the Vitest test suite covering validation, duplicate handling, and authorization behavior.
+
+### Example where I changed AI output
+
+An early AI suggestion around duplicate handling did not match the behavior I wanted. I revised the implementation to align with my chosen validation strategy and database constraints, then updated the tests to verify the final behavior.
 
 ## Approximate time spent
 
+About 8-10 hours of active design, implementation, testing, and refinement.
 
 ## What I'd improve next
 
-1. Fix the `ReviewNote` initial-load gap (see Known Gaps).
-2. Middleware-based auth redirect instead of the error-boundary-catches-`UnauthenticatedError` pattern.
-3. CSV export of reviewed articles — cheap to add given the existing filtered-query shape.
-4. Saved filter presets, given filter state already lives in a serializable URL query string.
-5. Complete the AWS/SST deployment.
+1. Middleware-based auth redirect instead of the error-boundary-catches-`UnauthenticatedError` pattern.
+2. CSV export of reviewed articles — cheap to add given the existing filtered-query shape.
+3. Saved filter presets, given filter state already lives in a serializable URL query string.
+4. Complete the AWS/SST deployment.
+5. Allow users to correct imported rows with warnings (for example, an accidentally future publication year) directly from the import results screen and resubmit only those affected fields instead of re-uploading the entire spreadsheet.
