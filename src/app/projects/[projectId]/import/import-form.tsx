@@ -74,7 +74,7 @@ export function ImportForm({ projectId }: { projectId: string }) {
 
         <button
           type="submit"
-          disabled={isPending || !selectedFile}
+          disabled={isPending ?? !selectedFile}
           className="w-full rounded-full bg-violet-600 hover:bg-violet-750 py-3 text-sm font-bold text-white transition-all shadow-md shadow-violet-100 disabled:opacity-50 disabled:shadow-none cursor-pointer"
         >
           {isPending ? "Importing database..." : "Upload and Process"}
@@ -121,7 +121,7 @@ export function ImportForm({ projectId }: { projectId: string }) {
                   <tr key={r.rowNumber} className="hover:bg-slate-50/30 transition-colors">
                     <td className="px-4 py-3 font-semibold text-slate-500">{r.rowNumber}</td>
                     <td className="px-4 py-3">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold ${OUTCOME_STYLES[r.outcome] || "bg-slate-100 text-slate-600"}`}>
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold ${OUTCOME_STYLES[r.outcome] ?? "bg-slate-100 text-slate-600"}`}>
                         {r.outcome.replace("IMPORTED_WITH_WARNING", "WARNING").replace("SKIPPED_", "")}
                       </span>
                     </td>

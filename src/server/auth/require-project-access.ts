@@ -1,5 +1,5 @@
 import { db } from "~/server/db";
-import type { ProjectRole } from "../../../generated/prisma";
+import type { ProjectRole } from "~/generated/prisma";
 
 export class ForbiddenError extends Error {
   constructor(message = "You do not have access to this project.") {

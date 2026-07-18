@@ -35,7 +35,7 @@ export async function Header() {
                 <p className="text-[10px] text-slate-400 font-medium">{session.user.email}</p>
               </div>
               <div className="h-9 w-9 rounded-full bg-violet-100 text-violet-700 flex items-center justify-center font-bold text-sm border border-violet-200">
-                {session.user.name?.[0] || session.user.email?.[0]?.toUpperCase() || "U"}
+                {session.user.name?.[0] ?? session.user.email?.[0]?.toUpperCase() ?? "U"}
               </div>
               <form
                 action={async () => {

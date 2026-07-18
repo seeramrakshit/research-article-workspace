@@ -31,7 +31,7 @@ export default function ArticlesError({
   if (isForbidden) {
     return (
       <div className="mx-auto max-w-md p-12 text-center">
-        <p className="mb-2 font-medium text-gray-900">You don't have access to this project.</p>
+        <p className="mb-2 font-medium text-gray-900">You don&apos;t have access to this project.</p>
         <p className="mb-4 text-sm text-gray-500">
           Ask a project owner to add you, or return to your projects.
         </p>

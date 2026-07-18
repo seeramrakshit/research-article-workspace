@@ -86,7 +86,7 @@ function EmptyState({ hasAnyArticles, projectId }: { hasAnyArticles: boolean; pr
       </div>
       <h3 className="text-lg font-bold text-slate-800">No matches found</h3>
       <p className="text-sm text-slate-500 mt-1 max-w-xs mx-auto">
-        Your current filters didn't return any matching articles. Try modifying your search or status filter.
+        Your current filters didn&apos;t return any matching articles. Try modifying your search or status filter.
       </p>
       <div className="pt-6">
         <Link

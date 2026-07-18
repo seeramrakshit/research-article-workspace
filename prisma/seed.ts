@@ -4,38 +4,35 @@ const db = new PrismaClient();
 
 async function main() {
   // ---- Users ----
-  // aisha: org owner, owns Project Alpha
-  // ben: org member, reviewer on Project Alpha AND Project Beta
-  // carla: org member, but NOT on Project Beta — this is your "should be denied" user
   const aisha = await db.user.upsert({
-    where: { email: "aisha@easyslr.dev" },
+    where: { email: "aisha.parker@example.com" },
     update: {},
-    create: { email: "aisha@easyslr.dev", name: "Aisha (Org Owner)" },
+    create: { email: "aisha.parker@example.com", name: "Aisha (Org Owner)" },
   });
 
   const ben = await db.user.upsert({
-    where: { email: "ben@easyslr.dev" },
+    where: { email: "ben.carter@example.com" },
     update: {},
-    create: { email: "ben@easyslr.dev", name: "Ben (Reviewer)" },
+    create: { email: "ben.carter@example.com", name: "Ben (Reviewer)" },
   });
 
   const carla = await db.user.upsert({
-    where: { email: "carla@easyslr.dev" },
+    where: { email: "carla.wright@example.com" },
     update: {},
-    create: { email: "carla@easyslr.dev", name: "Carla (No Beta Access)" },
+    create: { email: "carla.wright@example.com", name: "Carla (No Beta Access)" },
   });
 
   // ---- Organizations ----
   const orgOne = await db.organization.upsert({
-    where: { slug: "cardio-research-group" },
+    where: { slug: "northbridge-medical-research" },
     update: {},
-    create: { name: "Cardio Research Group", slug: "cardio-research-group" },
+    create: { name: "Northbridge Medical Research Institute", slug: "northbridge-medical-research" },
   });
 
   const orgTwo = await db.organization.upsert({
-    where: { slug: "digital-health-lab" },
+    where: { slug: "center-clinical-evidence" },
     update: {},
-    create: { name: "Digital Health Lab", slug: "digital-health-lab" },
+    create: { name: "Center for Clinical Evidence", slug: "center-clinical-evidence" },
   });
 
   // ---- Org-level memberships ----
@@ -70,13 +67,13 @@ async function main() {
     where: {
       organizationId_name: {
         organizationId: orgOne.id,
-        name: "Project Alpha - Cardiac Telehealth Review",
+        name: "Telehealth Interventions for Chronic Disease Management",
       },
     },
     update: {},
     create: {
       organizationId: orgOne.id,
-      name: "Project Alpha - Cardiac Telehealth Review",
+      name: "Telehealth Interventions for Chronic Disease Management",
     },
   });
 
@@ -84,13 +81,13 @@ async function main() {
     where: {
       organizationId_name: {
         organizationId: orgOne.id,
-        name: "Project Beta - Digital Adherence Review",
+        name: "Medication Adherence in Cardiovascular Care",
       },
     },
     update: {},
     create: {
       organizationId: orgOne.id,
-      name: "Project Beta - Digital Adherence Review",
+      name: "Medication Adherence in Cardiovascular Care",
     },
   });
 
@@ -122,33 +119,65 @@ async function main() {
 
   // ---- A couple of seed articles so the table isn't empty on first load ----
   await db.article.upsert({
-    where: { projectId_pmid: { projectId: projectAlpha.id, pmid: "38910001" } },
+    where: { projectId_pmid: { projectId: projectAlpha.id, pmid: "39201042" } },
     update: {},
     create: {
       projectId: projectAlpha.id,
-      pmid: "38910001",
-      title: "Digital adherence tools for diabetes care: a randomized trial",
-      authors: "Rao A; Chen L; Smith J",
-      firstAuthor: "Rao A",
-      journal: "Journal of Digital Health",
+      pmid: "39201042",
+      title: "Effectiveness of home-based telehealth program for heart failure patients",
+      authors: "Parker A; Adams J; Rogers E",
+      firstAuthor: "Parker A",
+      journal: "New England Journal of Telemedicine",
       publicationYear: 2024,
-      doi: "10.1000/jdh.2024.001",
+      doi: "10.1056/nejt.2024.1102",
       status: "UNSCREENED",
     },
   });
 
   await db.article.upsert({
-    where: { projectId_pmid: { projectId: projectAlpha.id, pmid: "38910002" } },
+    where: { projectId_pmid: { projectId: projectAlpha.id, pmid: "38190240" } },
     update: {},
     create: {
       projectId: projectAlpha.id,
-      pmid: "38910002",
-      title: "Remote monitoring after cardiac surgery",
-      authors: "Williams P; Kumar S",
-      firstAuthor: "Williams P",
-      journal: "Clinical Cardiology Review",
+      pmid: "38190240",
+      title: "Mobile health applications for chronic obstructive pulmonary disease management: a systematic review",
+      authors: "Davis M; Sterling K",
+      firstAuthor: "Davis M",
+      journal: "Lancet Digital Health",
       publicationYear: 2023,
-      doi: "10.1000/ccr.2023.014",
+      doi: "10.1016/ldh.2023.08.012",
+      status: "EXCLUDED",
+    },
+  });
+
+  await db.article.upsert({
+    where: { projectId_pmid: { projectId: projectBeta.id, pmid: "39042180" } },
+    update: {},
+    create: {
+      projectId: projectBeta.id,
+      pmid: "39042180",
+      title: "Impact of mobile text message reminders on medication adherence in patients with coronary heart disease",
+      authors: "Carter B; Bennett R; Jenkins T",
+      firstAuthor: "Carter B",
+      journal: "Circulation: Cardiovascular Quality and Outcomes",
+      publicationYear: 2025,
+      doi: "10.1161/circout.2025.104",
+      status: "UNSCREENED",
+    },
+  });
+
+  await db.article.upsert({
+    where: { projectId_pmid: { projectId: projectBeta.id, pmid: "37910045" } },
+    update: {},
+    create: {
+      projectId: projectBeta.id,
+      pmid: "37910045",
+      title: "Polypill vs. standard care for medication adherence in secondary prevention of cardiovascular disease",
+      authors: "Gonzalez M; Perez R",
+      firstAuthor: "Gonzalez M",
+      journal: "Journal of the American College of Cardiology",
+      publicationYear: 2022,
+      doi: "10.1016/jacc.2022.09.009",
       status: "INCLUDED",
     },
   });

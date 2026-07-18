@@ -17,7 +17,8 @@ function normalizeDoi(value: unknown): string | null {
 }
 
 function normalizePmid(value: unknown): string | null {
-  return cleanString(String(value ?? "").trim() || null);
+  const pmidStr = typeof value === "string" || typeof value === "number" ? String(value) : "";
+  return cleanString(pmidStr.trim() ?? null);
 }
 
 function normalizeYear(value: unknown): {
@@ -31,7 +32,8 @@ function normalizeYear(value: unknown): {
   const currentYear = new Date().getFullYear();
 
   if (!Number.isFinite(asNumber) || !Number.isInteger(asNumber)) {
-    return { year: null, warning: `Publication Year "${String(value)}" is not a valid number` };
+    const yearStr = typeof value === "string" || typeof value === "number" ? String(value) : "unknown";
+    return { year: null, warning: `Publication Year "${yearStr}" is not a valid number` };
   }
   if (asNumber < 1900 || asNumber > currentYear + 1) {
     return { year: null, warning: `Publication Year ${asNumber} is outside a plausible range` };
