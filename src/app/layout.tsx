@@ -14,12 +14,17 @@ const geist = Geist({
   variable: "--font-geist-sans",
 });
 
+import { Header } from "~/components/header";
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${geist.variable}`}>
-      <body>{children}</body>
+      <body className="bg-slate-50/50 min-h-screen flex flex-col text-slate-900 antialiased">
+        <Header />
+        <main className="flex-1 flex flex-col">{children}</main>
+      </body>
     </html>
   );
 }

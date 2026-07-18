@@ -4,6 +4,7 @@ import { db } from "~/server/db";
 import { requireUserId } from "~/server/auth/current-user";
 import { requireProjectAccess } from "~/server/auth/require-project-access";
 import { articleSearchParamsSchema, type ArticleSearchParams } from "~/lib/articles/search-params";
+import { revalidatePath } from "next/cache";
 
 export async function listProjectArticles(projectId: string, rawParams: unknown = {}) {
   const userId = await requireUserId();
@@ -26,6 +27,11 @@ export async function listProjectArticles(projectId: string, rawParams: unknown 
         : {}),
     },
     orderBy: { [params.sort]: params.dir },
+    include: {
+      reviewNotes: {
+        orderBy: { createdAt: "asc" },
+      },
+    },
   });
 }
 
@@ -44,7 +50,9 @@ export async function updateArticleStatus(
   const article = await db.article.findFirst({ where: { id: articleId, projectId } });
   if (!article) throw new Error("Article not found in this project.");
 
-  return db.article.update({ where: { id: articleId }, data: { status } });
+  const res = await db.article.update({ where: { id: articleId }, data: { status } });
+  revalidatePath(`/projects/${projectId}/articles`);
+  return res;
 }
 
 export async function addReviewNote(articleId: string, projectId: string, body: string) {
@@ -56,7 +64,9 @@ export async function addReviewNote(articleId: string, projectId: string, body: 
 
   if (!body.trim()) throw new Error("Note cannot be empty.");
 
-  return db.reviewNote.create({
+  const res = await db.reviewNote.create({
     data: { articleId, userId, body: body.trim() },
   });
+  revalidatePath(`/projects/${projectId}/articles`);
+  return res;
 }
