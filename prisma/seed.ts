@@ -66,23 +66,33 @@ async function main() {
   });
 
   // ---- Projects ----
-  let projectAlpha = await db.project.findFirst({
-    where: { name: "Project Alpha - Cardiac Telehealth Review", organizationId: orgOne.id },
+  const projectAlpha = await db.project.upsert({
+    where: {
+      organizationId_name: {
+        organizationId: orgOne.id,
+        name: "Project Alpha - Cardiac Telehealth Review",
+      },
+    },
+    update: {},
+    create: {
+      organizationId: orgOne.id,
+      name: "Project Alpha - Cardiac Telehealth Review",
+    },
   });
-  if (!projectAlpha) {
-    projectAlpha = await db.project.create({
-      data: { name: "Project Alpha - Cardiac Telehealth Review", organizationId: orgOne.id },
-    });
-  }
 
-  let projectBeta = await db.project.findFirst({
-    where: { name: "Project Beta - Digital Adherence Review", organizationId: orgOne.id },
+  const projectBeta = await db.project.upsert({
+    where: {
+      organizationId_name: {
+        organizationId: orgOne.id,
+        name: "Project Beta - Digital Adherence Review",
+      },
+    },
+    update: {},
+    create: {
+      organizationId: orgOne.id,
+      name: "Project Beta - Digital Adherence Review",
+    },
   });
-  if (!projectBeta) {
-    projectBeta = await db.project.create({
-      data: { name: "Project Beta - Digital Adherence Review", organizationId: orgOne.id },
-    });
-  }
 
   // ---- Project-level memberships ----
   // Alpha: aisha (owner), ben (reviewer) — carla deliberately excluded

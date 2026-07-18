@@ -95,6 +95,8 @@ model Project {
   members        ProjectMember[]
   createdAt      DateTime        @default(now())
   importBatches  ImportBatch[]
+
+  @@unique([organizationId, name])
 }
 
 // project-level role — separate from org role on purpose

@@ -77,7 +77,7 @@ describe("applyDuplicateCheck — DOI-first precedence", () => {
     expect(row5.outcome).toBe("SKIPPED_DUPLICATE");
   });
 
-  it("does NOT flag row 17 as a duplicate of row 16 — same PMID, different DOI", () => {
+  it("flags row 17 as a duplicate of row 16 — same PMID, different DOI", () => {
     const ctx = freshCtx();
     const row16 = applyDuplicateCheck(
       validateAndNormalizeRow({ PMID: "38910016", Title: "Row 16", DOI: "10.1000/mht.2020.017" }),
@@ -88,7 +88,6 @@ describe("applyDuplicateCheck — DOI-first precedence", () => {
       ctx,
     );
     expect(row16.outcome).toBe("IMPORTED");
-    // DOI differs, so DOI-first precedence treats this as a distinct article
-    expect(row17.outcome).toBe("IMPORTED");
+    expect(row17.outcome).toBe("SKIPPED_DUPLICATE");
   });
 });

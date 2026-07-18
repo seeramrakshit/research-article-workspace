@@ -16295,6 +16295,7 @@ export namespace Prisma {
 
   export type ProjectWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    organizationId_name?: ProjectOrganizationIdNameCompoundUniqueInput
     AND?: ProjectWhereInput | ProjectWhereInput[]
     OR?: ProjectWhereInput[]
     NOT?: ProjectWhereInput | ProjectWhereInput[]
@@ -16305,7 +16306,7 @@ export namespace Prisma {
     articles?: ArticleListRelationFilter
     members?: ProjectMemberListRelationFilter
     importBatches?: ImportBatchListRelationFilter
-  }, "id">
+  }, "id" | "organizationId_name">
 
   export type ProjectOrderByWithAggregationInput = {
     id?: SortOrder
@@ -17971,6 +17972,11 @@ export namespace Prisma {
 
   export type ArticleOrderByRelationAggregateInput = {
     _count?: SortOrder
+  }
+
+  export type ProjectOrganizationIdNameCompoundUniqueInput = {
+    organizationId: string
+    name: string
   }
 
   export type ProjectCountOrderByAggregateInput = {

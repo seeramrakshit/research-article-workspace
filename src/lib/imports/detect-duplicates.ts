@@ -18,7 +18,7 @@ export function applyDuplicateCheck(
   if (doi && ctx.existingDois.has(doi)) {
     return { outcome: "SKIPPED_DUPLICATE", article: result.article, error: `Duplicate DOI: ${doi}` };
   }
-  if (!doi && pmid && ctx.existingPmids.has(pmid)) {
+  if (pmid && ctx.existingPmids.has(pmid)) {
     return { outcome: "SKIPPED_DUPLICATE", article: result.article, error: `Duplicate PMID: ${pmid}` };
   }
 
