@@ -48,11 +48,11 @@ Visit `http://localhost:3000/api/auth/signin` and sign in with one of the seeded
 
 | Email | Org role | Project Alpha | Project Beta |
 |---|---|---|---|
-| `aisha@easyslr.dev` | Owner | Owner | Owner |
-| `ben@easyslr.dev` | Member | Reviewer | Reviewer |
-| `carla@easyslr.dev` | Member (both orgs) | **No access** | **No access** |
+| `aisha.parker@example.com` | Owner | Owner | Owner |
+| `ben.carter@example.com` | Member | Reviewer | Reviewer |
+| `carla.wright@example.com` | Member (both orgs) | **No access** | **No access** |
 
-`carla` is deliberately excluded from both projects despite being an org member — she exists specifically to prove project access is enforced independently of org membership, both in manual testing and in the authorization test suite.
+`carla.wright@example.com` is deliberately excluded from both projects despite being an org member — she exists specifically to prove project access is enforced independently of org membership, both in manual testing and in the authorization test suite.
 
 ### Running tests
 
